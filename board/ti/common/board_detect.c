@@ -121,11 +121,11 @@ int __maybe_unused ti_i2c_eeprom_am_get(int bus_addr, int dev_addr)
 	int rc;
 	struct ti_am_eeprom am_ep;
 	struct ti_common_eeprom *ep;
-
+	puts("here we go\n");
 	ep = TI_EEPROM_DATA;
 	if (ep->header == TI_EEPROM_HEADER_MAGIC)
 		goto already_read;
-
+	puts("go here\n");
 	/* Initialize with a known bad marker for i2c fails.. */
 	ep->header = TI_DEAD_EEPROM_MAGIC;
 	ep->name[0] = 0x0;

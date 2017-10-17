@@ -248,8 +248,10 @@ void am33xx_spl_board_init(void)
 {
 	int mpu_vdd;
 
-	if (read_eeprom() < 0)
+	if (read_eeprom() < 0) {
+		puts("spl board init \n");
 		puts("Could not get board ID.\n");
+	}
 
 	/* Get the frequency */
 	dpll_mpu_opp100.m = am335x_get_efuse_mpu_max_freq(cdev);
@@ -390,8 +392,10 @@ const struct dpll_params *get_dpll_ddr_params(void)
 {
 	enable_i2c0_pin_mux();
 	i2c_init(CONFIG_SYS_OMAP24_I2C_SPEED, CONFIG_SYS_OMAP24_I2C_SLAVE);
-	if (read_eeprom() < 0)
+	if (read_eeprom() < 0) {
+		puts("get_dpll_ddr_params\n");
 		puts("Could not get board ID.\n");
+	}
 
 	if (board_is_evm_sk())
 		return &dpll_ddr_evm_sk;
@@ -422,8 +426,10 @@ void set_uart_mux_conf(void)
 
 void set_mux_conf_regs(void)
 {
-	if (read_eeprom() < 0)
+	if (read_eeprom() < 0) {
+		puts("set_mux_conf_regs\n");
 		puts("Could not get board ID.\n");
+	}
 
 	enable_board_pin_mux();
 }
@@ -462,8 +468,10 @@ const struct ctrl_ioregs ioregs = {
 
 void sdram_init(void)
 {
-	if (read_eeprom() < 0)
+	if (read_eeprom() < 0) {
+		puts("run here baby\n");
 		puts("Could not get board ID.\n");
+	}
 
 	if (board_is_evm_sk()) {
 		/*
@@ -865,7 +873,7 @@ int board_fit_config_name_match(const char *name)
 	else if (board_is_icev2() && !strcmp(name, "am335x-icev2"))
 		return 0;
 	else
-		return -1;
+		return 0;
 }
 #endif
 
