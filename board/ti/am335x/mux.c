@@ -397,7 +397,13 @@ void enable_board_pin_mux(void)
 		configure_module_pin_mux(rmii1_pin_mux);
 		configure_module_pin_mux(spi0_pin_mux);
 	} else {
-		puts("Unknown board, cannot configure pinmux.");
-		hang();
+		// puts("Unknown board, cannot configure pinmux.");
+		// hang();
+		/* Beaglebone LT pinmux */
+		configure_module_pin_mux(mii1_pin_mux);
+		configure_module_pin_mux(mmc0_pin_mux);
+		configure_module_pin_mux(nand_pin_mux);
+		configure_module_pin_mux(mmc1_pin_mux);
+
 	}
 }

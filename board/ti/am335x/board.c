@@ -495,8 +495,12 @@ void sdram_init(void)
 			   &ddr3_icev2_cmd_ctrl_data, &ddr3_icev2_emif_reg_data,
 			   0);
 	else
-		config_ddr(266, &ioregs, &ddr2_data,
-			   &ddr2_cmd_ctrl_data, &ddr2_emif_reg_data, 0);
+		// config_ddr(266, &ioregs, &ddr2_data,
+		// 	   &ddr2_cmd_ctrl_data, &ddr2_emif_reg_data, 0);
+		config_ddr(400, &ioregs_bonelt,
+			&ddr3_beagleblack_data,
+			&ddr3_beagleblack_cmd_ctrl_data,
+			&ddr3_beagleblack_emif_reg_data, 0);
 }
 #endif
 
