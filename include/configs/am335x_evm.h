@@ -90,12 +90,13 @@
 	func(DHCP, dhcp, na)
 
 #define CONFIG_BOOTCOMMAND \
-	"run findfdt; " \
-	"run init_console; " \
-	"run envboot; " \
-	"run distro_bootcmd"
-
-#include <config_distro_bootcmd.h>
+	"gpio clear 56; " \
+	"gpio clear 55; " \
+	"gpio clear 54; " \
+	"setenv mmcdev 1; " \
+	"setenv bootpart 1:1; " \
+	"run mmcboot;" \
+	"run nandboot;" \
 
 #ifndef CONFIG_SPL_BUILD
 #define CONFIG_EXTRA_ENV_SETTINGS \
@@ -126,6 +127,8 @@
 		"${optargs} " \
 		"root=${ramroot} " \
 		"rootfstype=${ramrootfstype}\0" \
+	"bootenv=uEnv.txt\0" \
+	"loadbootenv=load mmc ${bootpart} ${loadaddr} ${bootenv}\0" \
 	"loadramdisk=load mmc ${mmcdev} ${rdaddr} ramdisk.gz\0" \
 	"loadimage=load mmc ${bootpart} ${loadaddr} ${bootdir}/${bootfile}\0" \
 	"loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile}\0" \
@@ -145,11 +148,26 @@
 		"fi;\0" \
 	"mmcboot=mmc dev ${mmcdev}; " \
 		"if mmc rescan; then " \
+			"gpio set 54;" \
 			"echo SD/MMC found on device ${mmcdev};" \
-			"run envboot; " \
-			"if run loadimage; then " \
-				"run mmcloados;" \
+			"if run loadbootenv; then " \
+				"gpio set 55;" \
+				"echo Loaded environment from ${bootenv};" \
+				"run importbootenv;" \
 			"fi;" \
+			"if test -n $cape; then " \
+				"if test -e mmc ${bootpart} ${fdtdir}/$fdtbase-$cape.dtb; then " \
+					"setenv fdtfile $fdtbase-$cape.dtb; " \
+				"fi; " \
+				"echo using: $fdtfile...; " \
+			"fi; " \
+			"echo Checking if uenvcmd is set ...;" \
+			"if test -n $uenvcmd; then " \
+				"gpio set 56; " \
+				"echo Running uenvcmd ...;" \
+				"run uenvcmd;" \
+			"fi;" \
+			"echo; echo uenvcmd was not defined in uEnv.txt ...;"\
 		"fi;\0" \
 	"spiboot=echo Booting from spi ...; " \
 		"run spiargs; " \
@@ -172,6 +190,8 @@
 			"setenv fdtfile am335x-evmsk.dtb; fi; " \
 		"if test $board_name = A335_ICE; then " \
 			"setenv fdtfile am335x-icev2.dtb; fi; " \
+		"if test $board_name = AM335X_CUSTOM; then " \
+			"setenv fdtfile am335x-custom.dtb; fi; " \
 		"if test $fdtfile = undefined; then " \
 			"echo WARNING: Could not determine device tree to use; fi; \0" \
 	"init_console=" \
@@ -181,9 +201,7 @@
 			"setenv console ttyO0,115200n8;" \
 		"fi;\0" \
 	NANDARGS \
-	NETARGS \
-	DFUARGS \
-	BOOTENV
+	DFUARGS
 #endif
 
 /* NS16550 Configuration */

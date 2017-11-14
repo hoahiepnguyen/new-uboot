@@ -21,6 +21,11 @@ static inline int board_is_bone_lt(void)
 	return board_ti_is("A335BNLT");
 }
 
+static inline int board_is_custom(void)
+{
+    return board_ti_is("AM335X_CUSTOM");
+}
+
 static inline int board_is_bbg1(void)
 {
 	return board_is_bone_lt() && !strncmp(board_ti_get_rev(), "BBG1", 4);

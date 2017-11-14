@@ -66,7 +66,8 @@ static struct ctrl_dev *cdev = (struct ctrl_dev *)CTRL_DEVICE_BASE;
  */
 static inline int __maybe_unused read_eeprom(void)
 {
-	return ti_i2c_eeprom_am_get(-1, CONFIG_SYS_I2C_EEPROM_ADDR);
+	//return ti_i2c_eeprom_am_get(-1, CONFIG_SYS_I2C_EEPROM_ADDR);
+	return ti_i2c_eeprom_am_set("AM335X_CUSTOM", "1.0.0");
 }
 
 #ifndef CONFIG_DM_SERIAL
@@ -872,8 +873,10 @@ int board_fit_config_name_match(const char *name)
 		return 0;
 	else if (board_is_icev2() && !strcmp(name, "am335x-icev2"))
 		return 0;
-	else
+	else if (board_is_custom() && !strcmp(name, "am335x-custom"))
 		return 0;
+	else
+		return -1;
 }
 #endif
 

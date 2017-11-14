@@ -47,7 +47,10 @@ static int spl_fit_select_fdt(const void *fdt, int images, int *fdt_offsetp)
 			return -EINVAL;
 		}
 		if (board_fit_config_name_match(name))
+		{
+			printf("hiep debug: select FDT\n");
 			continue;
+		}
 
 		debug("Selecting config '%s'", name);
 		fdt_name = fdt_getprop(fdt, node, FIT_FDT_PROP, &len);
