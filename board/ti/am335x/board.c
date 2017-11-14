@@ -250,7 +250,6 @@ void am33xx_spl_board_init(void)
 	int mpu_vdd;
 
 	if (read_eeprom() < 0) {
-		puts("spl board init \n");
 		puts("Could not get board ID.\n");
 	}
 
@@ -394,7 +393,6 @@ const struct dpll_params *get_dpll_ddr_params(void)
 	enable_i2c0_pin_mux();
 	i2c_init(CONFIG_SYS_OMAP24_I2C_SPEED, CONFIG_SYS_OMAP24_I2C_SLAVE);
 	if (read_eeprom() < 0) {
-		puts("get_dpll_ddr_params\n");
 		puts("Could not get board ID.\n");
 	}
 
@@ -428,7 +426,6 @@ void set_uart_mux_conf(void)
 void set_mux_conf_regs(void)
 {
 	if (read_eeprom() < 0) {
-		puts("set_mux_conf_regs\n");
 		puts("Could not get board ID.\n");
 	}
 
@@ -470,7 +467,6 @@ const struct ctrl_ioregs ioregs = {
 void sdram_init(void)
 {
 	if (read_eeprom() < 0) {
-		puts("run here baby\n");
 		puts("Could not get board ID.\n");
 	}
 
