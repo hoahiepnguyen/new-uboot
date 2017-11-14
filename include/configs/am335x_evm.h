@@ -90,6 +90,11 @@
 	func(DHCP, dhcp, na)
 
 #define CONFIG_BOOTCOMMAND \
+	"if run userbutton; then " \
+		"setenv bootenv restore.txt;" \
+	"else " \
+		"setenv bootenv uEnv.txt;" \
+	"fi;" \
 	"gpio clear 56; " \
 	"gpio clear 55; " \
 	"gpio clear 54; " \
@@ -200,6 +205,7 @@
 		"else " \
 			"setenv console ttyO0,115200n8;" \
 		"fi;\0" \
+	"userbutton=gpio input 117;\0" \
 	NANDARGS \
 	DFUARGS
 #endif
