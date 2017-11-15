@@ -107,7 +107,7 @@ ulong bootstage_mark_name(enum bootstage_id id, const char *name)
 ulong bootstage_mark_code(const char *file, const char *func, int linenum)
 {
 	char *str, *p;
-	__maybe_unused char *end;
+	__maybe_unused Achar *end;
 	int len = 0;
 
 	/* First work out the length we need to allocate */

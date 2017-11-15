@@ -12,6 +12,8 @@
 #include <cli.h>
 #include <console.h>
 #include <version.h>
+#include <asm/gpio.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -39,12 +41,63 @@ static void run_preboot_environment_command(void)
 	}
 #endif /* CONFIG_PREBOOT */
 }
+#define GPIO_BUTTON		49
+#define GPIO_LED		40
+
+static ulong measureTimeButtonPressed(void)
+{
+	int buttonState;
+	ulong start;
+	ulong timeMeasure = 0;
+
+	start = get_timer(0);
+	buttonState = gpio_get_value(GPIO_BUTTON);
+	while(buttonState > 0)
+	{
+		//run here waiting for button released
+		buttonState = gpio_get_value(GPIO_BUTTON); //Update button state
+	}
+	timeMeasure = get_timer(start);
+
+	printf("GPIO_BUTTON: Time taken: %lu millisec\n", timeMeasure);
+
+	return timeMeasure;
+}
+
+static void check_gpio_pin_rst(void)
+{
+	ulong val;
+
+	gpio_request(GPIO_LED, "led");
+	gpio_request(GPIO_BUTTON, "button");
+
+	gpio_direction_input(GPIO_BUTTON);
+	gpio_direction_output(GPIO_LED, 1);
+
+	val = measureTimeButtonPressed();
+
+	if(val > 3000)
+	{
+		printf("RESTORE FIRMWARE NOW, PLEASE KEEP CABLE WHILE RESTORING\n");
+		gpio_direction_output(GPIO_LED, 0);
+		udelay(10);
+
+	}
+	else {
+		gpio_direction_output(GPIO_LED, 1);
+		udelay(10);
+	}
+	printf("GPIO_LED: value: %d\n", gpio_get_value(GPIO_LED));
+	gpio_free(GPIO_LED);
+	gpio_free(GPIO_BUTTON);
+}
 
 /* We come here after U-Boot is initialised and ready to process commands */
 void main_loop(void)
 {
 	const char *s;
 
+	check_gpio_pin_rst();
 	bootstage_mark_name(BOOTSTAGE_ID_MAIN_LOOP, "main_loop");
 
 #ifdef CONFIG_VERSION_VARIABLE
@@ -52,7 +105,6 @@ void main_loop(void)
 #endif /* CONFIG_VERSION_VARIABLE */
 
 	cli_init();
-
 	run_preboot_environment_command();
 
 #if defined(CONFIG_UPDATE_TFTP)

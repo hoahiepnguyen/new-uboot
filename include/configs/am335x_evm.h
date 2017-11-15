@@ -205,7 +205,7 @@
 		"else " \
 			"setenv console ttyO0,115200n8;" \
 		"fi;\0" \
-	"userbutton=gpio input 117;\0" \
+	"userbutton=gpio input 40;\0" \
 	NANDARGS \
 	DFUARGS
 #endif
