@@ -26,15 +26,12 @@ static void run_preboot_environment_command(void)
 {
 #ifdef CONFIG_PREBOOT
 	char *p;
-
 	p = getenv("preboot");
 	if (p != NULL) {
 # ifdef CONFIG_AUTOBOOT_KEYED
 		int prev = disable_ctrlc(1);	/* disable Control C checking */
 # endif
-
 		run_command_list(p, -1, 0);
-
 # ifdef CONFIG_AUTOBOOT_KEYED
 		disable_ctrlc(prev);	/* restore Control C checking */
 # endif
@@ -42,7 +39,7 @@ static void run_preboot_environment_command(void)
 #endif /* CONFIG_PREBOOT */
 }
 #define GPIO_BUTTON		49
-#define GPIO_LED		40
+#define GPIO_LED		2
 
 static ulong measureTimeButtonPressed(void)
 {
@@ -80,14 +77,10 @@ static void check_gpio_pin_rst(void)
 	{
 		printf("RESTORE FIRMWARE NOW, PLEASE KEEP CABLE WHILE RESTORING\n");
 		gpio_direction_output(GPIO_LED, 0);
-		udelay(10);
-
 	}
 	else {
 		gpio_direction_output(GPIO_LED, 1);
-		udelay(10);
 	}
-	printf("GPIO_LED: value: %d\n", gpio_get_value(GPIO_LED));
 	gpio_free(GPIO_LED);
 	gpio_free(GPIO_BUTTON);
 }
@@ -97,7 +90,6 @@ void main_loop(void)
 {
 	const char *s;
 
-	check_gpio_pin_rst();
 	bootstage_mark_name(BOOTSTAGE_ID_MAIN_LOOP, "main_loop");
 
 #ifdef CONFIG_VERSION_VARIABLE
@@ -105,6 +97,7 @@ void main_loop(void)
 #endif /* CONFIG_VERSION_VARIABLE */
 
 	cli_init();
+	check_gpio_pin_rst();
 	run_preboot_environment_command();
 
 #if defined(CONFIG_UPDATE_TFTP)
@@ -112,6 +105,8 @@ void main_loop(void)
 #endif /* CONFIG_UPDATE_TFTP */
 
 	s = bootdelay_process();
+	udelay(30);
+
 	if (cli_process_fdt(&s))
 		cli_secure_boot_cmd(s);
 
