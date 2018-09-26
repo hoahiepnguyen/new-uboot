@@ -40,6 +40,8 @@ static void run_preboot_environment_command(void)
 }
 #define GPIO_BUTTON		49
 #define GPIO_LED		2
+#define GPIO_NRST 		66
+#define GPIO_BOOT 		61
 
 static ulong measureTimeButtonPressed(void)
 {
@@ -85,6 +87,19 @@ static void check_gpio_pin_rst(void)
 	gpio_free(GPIO_BUTTON);
 }
 
+static void mic_array_power_pins(void)
+{
+	gpio_request(GPIO_NRST, "nrst");
+	gpio_request(GPIO_BOOT, "boot");
+
+	gpio_direction_output(GPIO_BOOT, 0);
+	gpio_direction_output(GPIO_NRST, 0);
+	udelay(10);
+	gpio_direction_output(GPIO_NRST, 1);
+
+	gpio_free(GPIO_BOOT);
+	gpio_free(GPIO_NRST);
+}
 /* We come here after U-Boot is initialised and ready to process commands */
 void main_loop(void)
 {
@@ -97,7 +112,7 @@ void main_loop(void)
 #endif /* CONFIG_VERSION_VARIABLE */
 
 	cli_init();
-	check_gpio_pin_rst();
+	mic_array_power_pins();
 	run_preboot_environment_command();
 
 #if defined(CONFIG_UPDATE_TFTP)
