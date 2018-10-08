@@ -651,8 +651,6 @@ int board_init(void)
 
 	/* enable i2c1 pin mux */
 	configure_module_pin_mux(i2c1_pin_mux);
-	printf("Hiep debug init i2c1 pin\n");
-
 	return 0;
 }
 
