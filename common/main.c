@@ -41,54 +41,11 @@ static void run_preboot_environment_command(void)
 	}
 #endif /* CONFIG_PREBOOT */
 }
-// #define GPIO_BUTTON		49
-// #define GPIO_LED		2
+
 #define GPIO_NRST 		66
-#define GPIO_BOOT 		61
+#define GPIO_BOOT 		49
 #define GPIO_PULSE 		67
-// static ulong measureTimeButtonPressed(void)
-// {
-// 	int buttonState;
-// 	ulong start;
-// 	ulong timeMeasure = 0;
 
-// 	start = get_timer(0);
-// 	buttonState = gpio_get_value(GPIO_BUTTON);
-// 	while(buttonState > 0)
-// 	{
-// 		//run here waiting for button released
-// 		buttonState = gpio_get_value(GPIO_BUTTON); //Update button state
-// 	}
-// 	timeMeasure = get_timer(start);
-
-// 	printf("GPIO_BUTTON: Time taken: %lu millisec\n", timeMeasure);
-
-// 	return timeMeasure;
-// }
-
-// static void check_gpio_pin_rst(void)
-// {
-// 	ulong val;
-
-// 	gpio_request(GPIO_LED, "led");
-// 	gpio_request(GPIO_BUTTON, "button");
-
-// 	gpio_direction_input(GPIO_BUTTON);
-// 	gpio_direction_output(GPIO_LED, 1);
-
-// 	val = measureTimeButtonPressed();
-
-// 	if(val > 3000)
-// 	{
-// 		printf("RESTORE FIRMWARE NOW, PLEASE KEEP CABLE WHILE RESTORING\n");
-// 		gpio_direction_output(GPIO_LED, 0);
-// 	}
-// 	else {
-// 		gpio_direction_output(GPIO_LED, 1);
-// 	}
-// 	gpio_free(GPIO_LED);
-// 	gpio_free(GPIO_BUTTON);
-// }
 
 static void mic_array_power_pins(void)
 {

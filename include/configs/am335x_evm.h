@@ -90,7 +90,7 @@
 	func(DHCP, dhcp, na)
 
 #define CONFIG_BOOTCOMMAND \
-	"i2c dev 1; " \
+	"i2c dev 2; " \
 	"gpio clear 67; " \
 	"i2c mw 0x68 0x0032.2 0x38; " \
 	"setenv bootenv uEnv.txt;" \

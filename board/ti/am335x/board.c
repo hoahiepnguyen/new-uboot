@@ -62,15 +62,22 @@ static struct ctrl_dev *cdev = (struct ctrl_dev *)CTRL_DEVICE_BASE;
 #define GPIO0_IRQSTATUSRAW	(AM33XX_GPIO0_BASE + 0x024)
 #define GPIO1_IRQSTATUSRAW	(AM33XX_GPIO1_BASE + 0x024)
 
-static struct module_pin_mux i2c1_pin_mux[] = {
-	{OFFSET(spi0_d1), (MODE(2) | RXACTIVE |
-			PULLUDEN | SLEWCTRL)},	/* I2C_DATA */
-	{OFFSET(spi0_cs0), (MODE(2) | RXACTIVE |
-			PULLUDEN | SLEWCTRL)},	/* I2C_SCLK */
+// static struct module_pin_mux i2c1_pin_mux[] = {
+// 	{OFFSET(spi0_d1), (MODE(2) | RXACTIVE |
+// 			PULLUDEN | SLEWCTRL)},	/* I2C_DATA */
+// 	{OFFSET(spi0_cs0), (MODE(2) | RXACTIVE |
+// 			PULLUDEN | SLEWCTRL)},	/* I2C_SCLK */
+// 	{OFFSET(gpmc_oen_ren), (MODE(7) | PULLUP_EN)}, /* GPIO2_3 */
+// 	{-1},
+// };
+
+static struct module_pin_mux i2c2_pin_mux[] = {
+	{OFFSET(uart1_rtsn), (MODE(3) | PULLUDEN | PULLUP_EN | RXACTIVE)},
+	/* UART1_CTS as I2C2-SDA */
+	{OFFSET(uart1_ctsn), (MODE(3) | PULLUDEN | PULLUP_EN | RXACTIVE)},
 	{OFFSET(gpmc_oen_ren), (MODE(7) | PULLUP_EN)}, /* GPIO2_3 */
 	{-1},
-};
-
+}; 
 /*
  * Read header information from EEPROM into global structure.
  */
@@ -649,8 +656,8 @@ int board_init(void)
 	}
 #endif
 
-	/* enable i2c1 pin mux */
-	configure_module_pin_mux(i2c1_pin_mux);
+	/* enable i2c2 pin mux */
+	configure_module_pin_mux(i2c2_pin_mux);
 	return 0;
 }
 
